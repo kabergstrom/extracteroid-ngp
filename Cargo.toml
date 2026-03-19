@@ -1,0 +1,30 @@
+[package]
+name = "extracteroid"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+newgameplus-api = { path = "../newgameplus2/newgameplus-api" }
+egui = "0.32.3"
+glam = "0.30"
+
+# Match engine workspace profile: disable debug_assertions for deps so egui
+# ABI (struct sizes) matches the release-built engine.
+[profile.dev.package."*"]
+debug-assertions = false
+
+[profile.dev.package.egui]
+opt-level = 2
+debug-assertions = false
+
+[profile.dev.package.glam]
+opt-level = 2
+
+[profile.dev.package.newgameplus-api]
+opt-level = 2
+
+[profile.dev.package.epaint]
+opt-level = 2
