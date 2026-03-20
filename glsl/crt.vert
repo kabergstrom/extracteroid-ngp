@@ -9,6 +9,8 @@ void main() {
     // Fullscreen triangle from gl_VertexIndex (3 vertices, no buffer needed).
     // Vertex 0: (-1, -1), Vertex 1: (3, -1), Vertex 2: (-1, 3)
     vec2 pos = vec2((gl_VertexIndex << 1) & 2, gl_VertexIndex & 2);
-    v_uv = pos;
+    // Flip V: slug canvas renders with OpenGL ortho, so the texture content
+    // is vertically flipped in the Vulkan/DX12 framebuffer.
+    v_uv = vec2(pos.x, 1.0 - pos.y);
     gl_Position = vec4(pos * 2.0 - 1.0, 0.0, 1.0);
 }

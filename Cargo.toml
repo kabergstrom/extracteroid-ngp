@@ -6,6 +6,9 @@ edition = "2024"
 [lib]
 crate-type = ["cdylib", "rlib"]
 
+[build-dependencies]
+ngp-source-hash = { path = "../newgameplus2/ngp-source-hash" }
+
 [dependencies]
 newgameplus-api = { path = "../newgameplus2/newgameplus-api" }
 egui = "0.32.3"

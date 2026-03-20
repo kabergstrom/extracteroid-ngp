@@ -114,6 +114,7 @@ dependencies = [
  "egui",
  "glam",
  "newgameplus-api",
+ "ngp-source-hash",
 ]
 
 [[package]]
