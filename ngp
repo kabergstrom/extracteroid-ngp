@@ -1,0 +1,21 @@
+#!/bin/sh
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+NGP_DIR="$SCRIPT_DIR/../newgameplus2"
+case "$(uname -s)" in
+    Darwin) exec "$NGP_DIR/bin/ngp-darwin" "$@" ;;
+    *)
+        if [ -e /proc/sys/fs/binfmt_misc/WSLInterop ]; then
+            NGP_CMD="$(wslpath -w "$NGP_DIR/ngp.cmd")"
+            case "$1" in
+                start|"")
+                    (cmd.exe /C "$NGP_CMD" "$@" &)
+                    ;;
+                *)
+                    cmd.exe /C "$NGP_CMD" "$@"
+                    ;;
+            esac
+        else
+            exec "$NGP_DIR/bin/ngp-linux" "$@"
+        fi
+        ;;
+esac
