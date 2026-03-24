@@ -1,6 +1,8 @@
 #![no_std]
 extern crate alloc;
 
+use alloc::format;
+
 #[derive(newgameplus_api::NgpModule)]
 struct Module;
 use newgameplus_api::*;
@@ -84,7 +86,7 @@ pub fn module_render(ctx: &dyn RenderCtx, _phys: &dyn PhysicsCtx, cf: Format, df
     {
         let mut canvas = ctx.acquire_canvas(slug_rt);
         canvas.set_clear_color(canvas::Color::srgba(0.05, 0.0, 0.1, 1.0));
-        let text = "EXTRACTEROID";
+        let text = &format!("EXTRACTEROID {}", 1.0);
         let metrics = ctx.measure_text(state.font, text, 48.0);
         let x = 256.0 - metrics.width / 2.0;
         let y = 128.0 - metrics.height / 2.0 + metrics.ascent;
@@ -239,6 +241,7 @@ pub fn module_ui(ui: &mut egui::Ui, ctx: &dyn RenderCtx, _phys: &dyn PhysicsCtx)
     let state = get_or_insert_state(ctx, || init_state(ctx));
     state.frame += 1;
     ui.heading("Extracteroid");
+    ctx.show_gc_trace(ui);
     let rect = ui.available_rect_before_wrap();
     if let Some(scene_rt) = state.scene_target {
         paint_texture::paint(ctx, ui, rect, scene_rt.texture);
