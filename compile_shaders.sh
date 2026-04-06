@@ -5,5 +5,5 @@ cargo run --manifest-path ../rafx/Cargo.toml --release --package rafx-shader-pro
 --spv-path processed_shaders \
 --dx12-generated-src-path processed_shaders \
 --cooked-shaders-path cooked_shaders \
---package-vk --package-dx12 \
+--package-vk --package-dx12 --package-metal \
 --rs-mod-path src/shaders/

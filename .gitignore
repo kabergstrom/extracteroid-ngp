@@ -1,3 +1,4 @@
 /target
 /processed_shaders
 /cooked_shaders
+.direnv

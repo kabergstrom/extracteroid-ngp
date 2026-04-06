@@ -1,21 +1,31 @@
-#!/bin/sh
+#!/usr/bin/env bash
+set -euo pipefail
+
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-NGP_DIR="$SCRIPT_DIR/../newgameplus2"
+NGP_DIR="$SCRIPT_DIR/../newgameplus"
+
 case "$(uname -s)" in
-    Darwin) exec "$NGP_DIR/bin/ngp-darwin" "$@" ;;
-    *)
-        if [ -e /proc/sys/fs/binfmt_misc/WSLInterop ]; then
-            NGP_CMD="$(wslpath -w "$NGP_DIR/ngp.cmd")"
-            case "$1" in
-                start|"")
-                    (cmd.exe /C "$NGP_CMD" "$@" &)
-                    ;;
-                *)
-                    cmd.exe /C "$NGP_CMD" "$@"
-                    ;;
-            esac
-        else
-            exec "$NGP_DIR/bin/ngp-linux" "$@"
-        fi
-        ;;
+    Darwin) RAFX_FEATURE="rafx-vulkan" ;;
+    Linux)  RAFX_FEATURE="rafx-vulkan" ;;
+    *)      echo "Unsupported platform: $(uname -s)" >&2; exit 1 ;;
 esac
+
+# Build the extracteroid module
+cargo build --manifest-path "$SCRIPT_DIR/Cargo.toml"
+
+# Build source-walk (needed for --dev mode)
+cargo build --manifest-path "$NGP_DIR/Cargo.toml" \
+    -p source-walk --release
+
+# Build the engine
+cargo build --manifest-path "$NGP_DIR/Cargo.toml" \
+    -p newgameplus --no-default-features --features "$RAFX_FEATURE"
+
+# Run the engine, pointing at extracteroid's target dir for the module dylib
+ENGINE="$NGP_DIR/target/debug/newgameplus"
+RUST_LOG=info exec "$ENGINE" \
+    --module-crate extracteroid \
+    --target-dir "$SCRIPT_DIR/target" \
+    --module-dir "$SCRIPT_DIR" \
+    --dev \
+    "$@"
