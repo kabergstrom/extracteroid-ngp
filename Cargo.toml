@@ -13,6 +13,7 @@ ngp-source-hash = { path = "../newgameplus/ngp-source-hash" }
 newgameplus-api = { path = "../newgameplus/newgameplus-api" }
 egui = "0.32.3"
 glam = "0.30"
+hashbrown = "0.15"
 
 # Match engine workspace profile: disable debug_assertions for deps so egui
 # ABI (struct sizes) matches the release-built engine.
